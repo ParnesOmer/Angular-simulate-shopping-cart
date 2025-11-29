@@ -1,0 +1,37 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" formControlName="email" />
+    <div *ngIf="form.get('email')?.touched && form.get('email')?.errors">
+      <div *ngIf="form.get('email')?.errors?.['required']">Email is required</div>
+      <div *ngIf="form.get('email')?.errors?.['email']">Invalid email format</div>
+    </div>
+  </div>
+
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" formControlName="password" />
+    <div *ngIf="form.get('password')?.touched && form.get('password')?.errors">
+      <div *ngIf="form.get('password')?.errors?.['required']">Password is required</div>
+      <div *ngIf="form.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+      <div *ngIf="form.get('password')?.errors?.['missingUppercase']">Password must contain at least one uppercase letter</div>
+    </div>
+  </div>
+
+  <div>
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" formControlName="confirmPassword" />
+    <div *ngIf="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.errors">
+      <div *ngIf="form.get('confirmPassword')?.errors?.['required']">Please confirm your password</div>
+    </div>
+    <div *ngIf="form.touched && form.errors?.['passwordsMismatch']">
+      Passwords do not match
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">Register</button>
+
+  <div *ngIf="submitError">
+    {{ submitError }}
+  </div>
+</form>
