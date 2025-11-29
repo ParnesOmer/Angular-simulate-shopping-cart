@@ -8,17 +8,17 @@ test.describe('Auth - Login', () => {
 
     // 2. Create the user
     await page.goto('/register');
-    await page.getByLabel('Email:').fill(email);
-    await page.locator('#password').fill(password);
-    await page.locator('#confirmPassword').fill(password);
-    await page.getByRole('button', { name: /register/i }).click();
+    await page.getByTestId('register-email').fill(email);
+    await page.getByTestId('register-password').fill(password);
+    await page.getByTestId('register-confirm-password').fill(password);
+    await page.getByTestId('register-submit').click();
     await expect(page).toHaveURL(/.*login/);
 
     // 3. Perform login
     await page.goto('/login');
-    await page.getByLabel('Email:').fill(email);
-    await page.locator('#password').fill(password);
-    await page.getByRole('button', { name: /login/i }).click();
+    await page.getByTestId('login-email').fill(email);
+    await page.getByTestId('login-password').fill(password);
+    await page.getByTestId('login-submit').click();
 
     // 4. Assertions
     await expect(page).toHaveURL(/.*app\/products/);

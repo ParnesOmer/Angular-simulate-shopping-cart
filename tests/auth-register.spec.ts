@@ -10,12 +10,12 @@ test.describe('Auth - Register', () => {
     const password = 'Abcdef1';
 
     // 3) Fill the registration form
-    await page.getByLabel('Email:').fill(email);
-    await page.locator('#password').fill(password);
-    await page.locator('#confirmPassword').fill(password);
+    await page.getByTestId('register-email').fill(email);
+    await page.getByTestId('register-password').fill(password);
+    await page.getByTestId('register-confirm-password').fill(password);
 
     // 4) Submit the form
-    await page.getByRole('button', { name: /register/i }).click();
+    await page.getByTestId('register-submit').click();
 
     // 5) Assert redirect to /login
     await expect(page).toHaveURL(/.*login/);

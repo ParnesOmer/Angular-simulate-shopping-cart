@@ -1,5 +1,36 @@
-<nav>
-  <a routerLink="/app/products">Products</a>
-  <a routerLink="/app/cart">Cart</a>
-  <button (click)="logout()">Logout</button>
-</nav>
+<header class="shop-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-logo">
+        BMC <span>Shop</span>
+      </div>
+      <nav class="header-nav">
+        <a
+          routerLink="/app/products"
+          routerLinkActive="active-link"
+          class="nav-link"
+          data-testid="nav-products"
+        >
+          Products
+        </a>
+        <a
+          routerLink="/app/cart"
+          routerLinkActive="active-link"
+          class="nav-link"
+          data-testid="nav-cart"
+        >
+          Cart
+        </a>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <span class="user-email" data-testid="nav-user-email">
+        {{ currentUserEmail }}
+      </span>
+      <button class="logout-button" (click)="logout()" data-testid="nav-logout">
+        Logout
+      </button>
+    </div>
+  </div>
+</header>

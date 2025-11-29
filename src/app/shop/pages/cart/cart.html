@@ -1,16 +1,62 @@
 <app-header></app-header>
 
-<div *ngFor="let item of items">
-  <div>
-    <h3>{{ item.product.name }}</h3>
-    <p>Unit Price: ${{ item.product.price }}</p>
-    <p>Quantity: {{ item.quantity }}</p>
-    <p>Subtotal: ${{ item.product.price * item.quantity }}</p>
+<main class="page-container cart-page">
+  <h1 class="page-title" data-testid="cart-title">Your Cart</h1>
+
+  <div *ngIf="cartItems.length === 0" class="cart-empty">
+    <p>Your cart is empty.</p>
+    <a routerLink="/app/products" class="primary-link">Back to products</a>
   </div>
-</div>
 
-<div>
-  <p>Total: ${{ getTotal() }}</p>
-</div>
+  <div *ngIf="cartItems.length > 0" class="cart-layout">
+    <section class="cart-items">
+      <article class="cart-card" *ngFor="let item of cartItems" data-testid="cart-item">
+        <div class="cart-image-wrapper">
+          <img
+            [src]="item.product.imageUrl"
+            [alt]="item.product.name"
+            class="cart-image"
+          />
+        </div>
 
-<button (click)="clearCart()">Clear cart</button>
+        <div class="cart-card-body">
+          <h2 class="cart-item-name" data-testid="cart-item-name">{{ item.product.name }}</h2>
+          <p class="cart-item-price">${{ item.product.price }}</p>
+
+          <div class="cart-quantity-row">
+            <button type="button" (click)="decreaseQuantity(item.product.id)" data-testid="cart-decrease">−</button>
+            <span data-testid="cart-item-quantity">{{ item.quantity }}</span>
+            <button type="button" (click)="increaseQuantity(item.product.id)" data-testid="cart-increase">+</button>
+          </div>
+
+          <p class="cart-item-subtotal" data-testid="cart-item-subtotal">
+            Subtotal: ${{ item.product.price * item.quantity }}
+          </p>
+
+          <button
+            type="button"
+            class="remove-btn"
+            (click)="removeFromCart(item.product.id)"
+            data-testid="cart-remove"
+          >
+            Remove
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <aside class="cart-summary" data-testid="cart-summary">
+      <h2>Order Summary</h2>
+      <p data-testid="cart-summary-items">Items: {{ totalItems }}</p>
+      <p class="cart-summary-total" data-testid="cart-summary-total">Total: ${{ totalPrice }}</p>
+
+      <button type="button" class="checkout-btn" data-testid="cart-checkout">
+        Checkout
+      </button>
+
+      <button type="button" class="clear-btn" (click)="clearCart()" data-testid="cart-clear">
+        Clear cart
+      </button>
+    </aside>
+  </div>
+</main>

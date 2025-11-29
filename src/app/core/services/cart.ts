@@ -41,6 +41,30 @@ export class Cart {
     this.saveCart();
   }
 
+  increaseQuantity(productId: number): void {
+    this.loadCart();
+    const item = this.items.find(i => i.product.id === productId);
+    if (item) {
+      item.quantity += 1;
+      this.saveCart();
+    }
+  }
+
+  decreaseQuantity(productId: number): void {
+    this.loadCart();
+    const item = this.items.find(i => i.product.id === productId);
+    if (item && item.quantity > 1) {
+      item.quantity -= 1;
+      this.saveCart();
+    }
+  }
+
+  removeFromCart(productId: number): void {
+    this.loadCart();
+    this.items = this.items.filter(i => i.product.id !== productId);
+    this.saveCart();
+  }
+
   clear(): void {
     this.loadCart();
     this.items = [];

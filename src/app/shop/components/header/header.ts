@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 
@@ -8,14 +8,20 @@ import { Auth } from '../../../core/services/auth';
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {
+export class Header implements OnInit {
+  currentUserEmail: string | null = null;
+
   constructor(
     private router: Router,
-    private auth: Auth
+    private authService: Auth
   ) {}
 
+  ngOnInit(): void {
+    this.currentUserEmail = this.authService.getCurrentUserEmail();
+  }
+
   logout(): void {
-    this.auth.logout();
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

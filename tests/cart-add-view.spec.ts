@@ -8,42 +8,70 @@ test.describe('Shop - Cart', () => {
 
     // 1. Register a user
     await page.goto('/register');
-    await page.getByLabel('Email:').fill(email);
-    await page.locator('#password').fill(password);
-    await page.locator('#confirmPassword').fill(password);
-    await page.getByRole('button', { name: /register/i }).click();
+    await page.getByTestId('register-email').fill(email);
+    await page.getByTestId('register-password').fill(password);
+    await page.getByTestId('register-confirm-password').fill(password);
+    await page.getByTestId('register-submit').click();
     await expect(page).toHaveURL(/.*login/);
 
     // 2. Login
     await page.goto('/login');
-    await page.getByLabel('Email:').fill(email);
-    await page.locator('#password').fill(password);
-    await page.getByRole('button', { name: /login/i }).click();
+    await page.getByTestId('login-email').fill(email);
+    await page.getByTestId('login-password').fill(password);
+    await page.getByTestId('login-submit').click();
     await expect(page).toHaveURL(/.*app\/products/);
 
-    // 3. Add products to cart
-    await page.getByRole('button', { name: /add/i }).first().click();
-    // Optionally click add twice to test quantity increment
-    await page.getByRole('button', { name: /add/i }).first().click();
+    // 3. Get the first product's name and price before adding to cart
+    const firstProduct = page.getByTestId('product-card').first();
+    const productName = await firstProduct.locator('.product-name').textContent();
+    const productPriceText = await firstProduct.locator('.product-price').textContent();
+    const productPrice = productPriceText ? parseFloat(productPriceText.replace('$', '')) : 0;
 
-    // 4. Navigate to cart page
-    await page.getByRole('link', { name: /cart/i }).click();
+    // 4. Add product to cart (click Add to cart on first product)
+    await firstProduct.getByTestId('product-add-to-cart').click();
+
+    // 5. Navigate to cart page via header
+    await page.getByTestId('nav-cart').click();
     await expect(page).toHaveURL(/.*app\/cart/);
 
-    // 5. Verify cart contents
-    // Check that at least one product name is visible
-    await expect(page.locator('text=Product A')).toBeVisible();
+    // 6. Verify cart contents
+    // Check that at least one cart item exists
+    const cartItems = page.getByTestId('cart-item');
+    await expect(cartItems.first()).toBeVisible();
     
-    // Check that quantity is visible (should be 2 since we clicked Add twice)
-    await expect(page.locator('text=Quantity: 2')).toBeVisible();
+    // Verify the product name matches
+    const firstCartItemName = await page.getByTestId('cart-item-name').first().textContent();
+    expect(firstCartItemName).toBe(productName);
 
-    // 6. Reload page
+    // Verify quantity is 1
+    const quantity = await page.getByTestId('cart-item-quantity').first().textContent();
+    expect(quantity).toBe('1');
+
+    // Verify subtotal matches the product price
+    const subtotalText = await page.getByTestId('cart-item-subtotal').first().textContent();
+    const subtotal = subtotalText ? parseFloat(subtotalText.replace('Subtotal: $', '')) : 0;
+    expect(subtotal).toBe(productPrice);
+
+    // Verify cart summary
+    const summaryItems = await page.getByTestId('cart-summary-items').textContent();
+    expect(summaryItems).toContain('Items: 1');
+
+    const summaryTotalText = await page.getByTestId('cart-summary-total').textContent();
+    const summaryTotal = summaryTotalText ? parseFloat(summaryTotalText.replace('Total: $', '')) : 0;
+    expect(summaryTotal).toBe(productPrice);
+
+    // 7. Reload page
     await page.reload();
 
-    // 7. Verify persistence
-    // Ensure the cart item is still visible after reload
-    await expect(page.locator('text=Product A')).toBeVisible();
-    await expect(page.locator('text=Quantity: 2')).toBeVisible();
+    // 8. Verify persistence after reload
+    await expect(cartItems.first()).toBeVisible();
+    const persistedName = await page.getByTestId('cart-item-name').first().textContent();
+    expect(persistedName).toBe(productName);
+    
+    const persistedQuantity = await page.getByTestId('cart-item-quantity').first().textContent();
+    expect(persistedQuantity).toBe('1');
+
+    const persistedSummaryItems = await page.getByTestId('cart-summary-items').textContent();
+    expect(persistedSummaryItems).toContain('Items: 1');
   });
 });
-
