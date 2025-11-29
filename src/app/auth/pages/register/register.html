@@ -1,37 +1,51 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div>
-    <label for="email">Email:</label>
-    <input type="email" id="email" formControlName="email" />
-    <div *ngIf="form.get('email')?.touched && form.get('email')?.errors">
-      <div *ngIf="form.get('email')?.errors?.['required']">Email is required</div>
-      <div *ngIf="form.get('email')?.errors?.['email']">Invalid email format</div>
-    </div>
-  </div>
+<div class="app-root">
+  <div class="card">
+    <h2 class="card-title">Create an account</h2>
+    <p class="card-subtitle">
+      Register to start shopping in the demo store.
+    </p>
 
-  <div>
-    <label for="password">Password:</label>
-    <input type="password" id="password" formControlName="password" />
-    <div *ngIf="form.get('password')?.touched && form.get('password')?.errors">
-      <div *ngIf="form.get('password')?.errors?.['required']">Password is required</div>
-      <div *ngIf="form.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
-      <div *ngIf="form.get('password')?.errors?.['missingUppercase']">Password must contain at least one uppercase letter</div>
-    </div>
-  </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email" />
+        <div *ngIf="form.get('email')?.touched && form.get('email')?.errors">
+          <div *ngIf="form.get('email')?.errors?.['required']" class="error-text">Email is required</div>
+          <div *ngIf="form.get('email')?.errors?.['email']" class="error-text">Invalid email format</div>
+        </div>
+      </div>
 
-  <div>
-    <label for="confirmPassword">Confirm Password:</label>
-    <input type="password" id="confirmPassword" formControlName="confirmPassword" />
-    <div *ngIf="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.errors">
-      <div *ngIf="form.get('confirmPassword')?.errors?.['required']">Please confirm your password</div>
-    </div>
-    <div *ngIf="form.touched && form.errors?.['passwordsMismatch']">
-      Passwords do not match
-    </div>
-  </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" formControlName="password" />
+        <div *ngIf="form.get('password')?.touched && form.get('password')?.errors">
+          <div *ngIf="form.get('password')?.errors?.['required']" class="error-text">Password is required</div>
+          <div *ngIf="form.get('password')?.errors?.['minlength']" class="error-text">Password must be at least 6 characters</div>
+          <div *ngIf="form.get('password')?.errors?.['missingUppercase']" class="error-text">Password must contain at least one uppercase letter</div>
+        </div>
+      </div>
 
-  <button type="submit" [disabled]="form.invalid">Register</button>
+      <div>
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" />
+        <div *ngIf="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.errors">
+          <div *ngIf="form.get('confirmPassword')?.errors?.['required']" class="error-text">Please confirm your password</div>
+        </div>
+        <div *ngIf="form.touched && form.errors?.['passwordsMismatch']" class="error-text">
+          Passwords do not match
+        </div>
+      </div>
 
-  <div *ngIf="submitError">
-    {{ submitError }}
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Register</button>
+
+      <div *ngIf="submitError" class="error-text">
+        {{ submitError }}
+      </div>
+    </form>
+
+    <p>
+      Already have an account?
+      <a class="link" routerLink="/login">Login</a>
+    </p>
   </div>
-</form>
+</div>
