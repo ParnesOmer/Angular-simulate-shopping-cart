@@ -11,6 +11,10 @@ export class Auth {
 
   constructor(private localStorage: LocalStorage) {}
 
+  /* “In this project everything happens on the frontend as an exercise. 
+  * In the real world I would do server-side hashing (bcrypt/argon2 + salt). 
+  * Here I used a simple deterministic hash to avoid storing a raw password and to demonstrate the idea.”
+  */
   private hashPassword(password: string): string {
     let hash = 0;
     for (let i = 0; i < password.length; i++) {
