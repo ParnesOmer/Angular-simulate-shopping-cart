@@ -4,15 +4,6 @@ import { authGuard } from './core/guards/auth-guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  },
-  {
-    path: '',
-    loadChildren: () => import('./auth/auth-module').then(m => m.AuthModule)
-  },
-  {
-    path: 'auth',
     loadChildren: () => import('./auth/auth-module').then(m => m.AuthModule)
   },
   {
